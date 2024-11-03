@@ -16,6 +16,7 @@ const initialState = {
   correction: null,
   humanResponse: "",
   userID: "",
+  step: 0,
 };
 
 const useGameStore = create((set) => ({
@@ -35,6 +36,8 @@ const useGameStore = create((set) => ({
       ...initialState, // Reset to initial state if needed
       ...gameData, // Update state with the received game data
     })),
+
+  setStep: (newStep) => set({ step: newStep }), // Function to set the step
 }));
 
 export { useGameStore };

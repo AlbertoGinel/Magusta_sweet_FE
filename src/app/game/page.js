@@ -2,6 +2,9 @@
 
 import React, { useEffect, useCallback } from "react";
 import { useGameStore } from "../_lib/stores/gameStore";
+import PrepareGame from "../components/PrepareGame";
+import WaitingInput from "../components/WaitingInput";
+import AfterMatch from "../components/AfterMatch";
 
 export default function Game() {
   // Access Zustand store states and actions
@@ -26,7 +29,8 @@ export default function Game() {
         throw new Error("Failed to fetch game data");
       }
 
-      const gameData = await response.json();
+      const text = await response.text();
+      const gameData = text ? JSON.parse(text) : null;
 
       if (gameData) {
         setGameData(gameData); // Update Zustand store with the fetched game data
@@ -37,51 +41,35 @@ export default function Game() {
       console.error("Error fetching game data:", error);
       setGameData(null); // Set null if fetch fails
     }
-  }, [setGameData]); // Only setGameData is a dependency
+  }, [setGameData]);
 
-  // useEffect to load game data on component mount
   useEffect(() => {
     fetchGameData();
 
     return () => {
       resetGame(); // Optionally reset the game state when component unmounts
     };
-  }, [fetchGameData, resetGame]); // Include fetchGameData in dependencies
-
-  // Render logic based on game state
-  if (state.gameData === null) {
-    // State 1: No game data, show menu to create a new game
-    return (
-      <div>
-        <h1>Welcome to the Game!</h1>
-        <p>No active game found. Please start a new game.</p>
-        {/* Include button to create game, e.g., <button onClick={createNewGame}>Create Game</button> */}
-      </div>
-    );
-  } else if (state.step === 1) {
-    // State 2: Game data exists, waiting for response
-    return (
-      <div>
-        <h1>Waiting for Response</h1>
-        <p>Please wait, your opponent is responding...</p>
-      </div>
-    );
-  } else if (state.step === 2) {
-    // State 3: Aftermath
-    return (
-      <div>
-        <h1>Game Over</h1>
-        <p>Here are the results:</p>
-        {/* Render results and aftermath information */}
-      </div>
-    );
-  }
+  }, [fetchGameData, resetGame]);
 
   return (
     <div>
-      <h1>Game</h1>
-      <p>Type: {state.type || "Loading..."}</p>
-      {/* Render other game information as needed */}
+      {state.step === 0 ? (
+        <div>
+          <PrepareGame />
+        </div>
+      ) : state.step === 1 ? (
+        <div>
+          <WaitingInput />
+        </div>
+      ) : state.step === 2 ? (
+        <div>
+          <AfterMatch />
+        </div>
+      ) : (
+        <div>
+          <h1>Loading...</h1>
+        </div>
+      )}
     </div>
   );
 }
