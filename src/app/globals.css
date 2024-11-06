@@ -83,3 +83,20 @@ input {
     @apply bg-background text-foreground;
   }
 }
+
+main {
+  &>div{
+    display: flex;
+    flex-grow: inherit;
+
+    &>div {
+      display: flex;
+      flex-direction: column;
+      flex-grow: inherit;
+    }
+  }
+
+  .number-card:hover {
+    cursor: pointer;
+  }
+}
