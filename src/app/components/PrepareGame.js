@@ -1,24 +1,26 @@
 "use client"; // Indicate it's a Client Component
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useGameStore } from "../_lib/stores/gameStore";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Toggle } from "@/components/ui/toggle"
-import { Globe } from "lucide-react"
+
+const ESTONIAN = "ESTONIAN";
+const ENGLISH = "ENGLISH";
 
 export default function PrepareGame() {
   const [length, setLength] = useState(4); // Default length is 4
-  const [language, setLanguage] = useState("ESTONIAN"); // Default language
+  const [language, setLanguage] = useState(ESTONIAN); // Default language
   const setGameData = useGameStore((state) => state.setGameData);
 
   const toggleLanguage = () => {
     setLanguage((prevLanguage) =>
-      prevLanguage === "ESTONIAN" ? "ENGLISH" : "ESTONIAN"
+      prevLanguage === ESTONIAN ? ENGLISH : ESTONIAN
     );
   };
 
-  const handlePlay = async () => {
+  const handlePlay = useCallback(async () => {
     try {
       const response = await fetch(
         "http://localhost:8080/api/game/creategame",
@@ -44,7 +46,7 @@ export default function PrepareGame() {
     } catch (error) {
       console.error("Error creating game:", error);
     }
-  };
+  }, [language, length, setGameData]);
 
   const handleCardClick = (number) => () => {
     setLength(number);
@@ -79,8 +81,8 @@ export default function PrepareGame() {
 
       <footer className="p-4">
         <div className="container mx-auto flex justify-end">
-          <Toggle aria-label="Toggle Language" onChange={toggleLanguage}>
-            <Globe className="h-4 w-4 mr-2" />
+          <Toggle aria-label="Toggle Language" onClick={toggleLanguage}>
+            <span class={language === ESTONIAN? "fi fi-ee": "fi fi-us"}></span>
             Toggle Language
           </Toggle>
         </div>
