@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameStore } from "./_lib/stores/gameStore";
 import EstonianWord from "./components/EstonianWord";
 import { Button } from "@/components/ui/button"
@@ -137,7 +137,9 @@ export default function Home() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
                 {[3, 4, 5, 6, 7, 8, 9, 10].map((number) => (
-                  <Card key={number} className="bg-primary text-white number-card hover:bg-primary/90"
+                  <Card key={number} className={length === number? "bg-primary/95" : "bg-primary" 
+                    + " text-white number-card hover:bg-primary/90 " 
+                  }
                     onClick={handleLengthChange(number)}
                   >
                     <CardContent className="flex items-center justify-center h-32">
