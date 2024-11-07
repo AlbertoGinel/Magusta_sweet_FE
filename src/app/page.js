@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameStore } from "./_lib/stores/gameStore";
 import EstonianWord from "./components/EstonianWord";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Toggle } from "@/components/ui/toggle"
+
+const ESTONIAN = "ESTONIAN";
+const ENGLISH = "ENGLISH";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -28,8 +34,8 @@ export default function Home() {
     setText(e.target.value); // Update state with the new text value
   };
 
-  const handleLengthChange = (e) => {
-    setLength(Number(e.target.value)); // Update the state with the new value
+  const handleLengthChange = (num) => () => {
+    setLength(num); // Update the state with the new value
   };
 
   const toggleLanguage = () => {
@@ -120,28 +126,47 @@ export default function Home() {
     <>
       {/* Conditionally render divs based on the gameState */}
       {gameState === "noGame" && (
-        <div>
-          <h1>No Game Available</h1>
+        <>
+          <div>
+            <div className="flex-grow">
 
-          <label htmlFor="length">Length</label>
-          <input
-            type="number"
-            id="length"
-            name="length"
-            min="3"
-            max="10"
-            value={length}
-            onChange={handleLengthChange} // Update state on user input
-          />
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold">No Game Available</h2>
+                <h3>Choose length</h3>
+              </div>
 
-          <button onClick={toggleLanguage}>
-            {language === "ESTONIAN" ? "ENGLISH" : "ESTONIAN"}
-          </button>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                {[3, 4, 5, 6, 7, 8, 9, 10].map((number) => (
+                  <Card key={number} className={length === number? "bg-primary/95" : "bg-primary" 
+                    + " text-white number-card hover:bg-primary/90 " 
+                  }
+                    onClick={handleLengthChange(number)}
+                  >
+                    <CardContent className="flex items-center justify-center h-32">
+                      <span className="text-4xl font-bold">{number}</span>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
 
-          <button onClick={createGame} disabled={loading}>
-            {loading ? "Creating..." : "Create Game"}
-          </button>
-        </div>
+              <div className="text-center">
+                <Button size="lg" className="bg-primary text-white hover:bg-primary/90"
+                  onClick={createGame} disabled={loading}
+                >
+                  {loading ? "Creating..." : "Create Game"}
+                </Button>
+              </div>
+            </div>
+          </div>
+          <footer className="p-4">
+            <div className="container mx-auto flex justify-end">
+              <Toggle aria-label="Toggle Language" onClick={toggleLanguage}>
+                <span class={language === ESTONIAN ? "fi fi-ee" : "fi fi-us"}></span>
+                {language}
+              </Toggle>
+            </div>
+          </footer>
+        </>
       )}
 
       {gameState === "gameCreated" && (
