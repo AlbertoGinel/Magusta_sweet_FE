@@ -1,24 +1,26 @@
 "use client"; // Indicate it's a Client Component
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useGameStore } from "../_lib/stores/gameStore";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Toggle } from "@/components/ui/toggle"
+
+const ESTONIAN = "ESTONIAN";
+const ENGLISH = "ENGLISH";
 
 export default function PrepareGame() {
   const [length, setLength] = useState(4); // Default length is 4
-  const [language, setLanguage] = useState("ESTONIAN"); // Default language
+  const [language, setLanguage] = useState(ESTONIAN); // Default language
   const setGameData = useGameStore((state) => state.setGameData);
-
-  const handleLengthChange = (event) => {
-    setLength(event.target.value);
-  };
 
   const toggleLanguage = () => {
     setLanguage((prevLanguage) =>
-      prevLanguage === "ESTONIAN" ? "ENGLISH" : "ESTONIAN"
+      prevLanguage === ESTONIAN ? ENGLISH : ESTONIAN
     );
   };
 
-  const handlePlay = async () => {
+  const handlePlay = useCallback(async () => {
     try {
       const response = await fetch(
         "http://localhost:8080/api/game/creategame",
@@ -44,29 +46,47 @@ export default function PrepareGame() {
     } catch (error) {
       console.error("Error creating game:", error);
     }
-  };
+  }, [language, length, setGameData]);
+
+  const handleCardClick = (number) => () => {
+    setLength(number);
+  }
+
 
   return (
-    <div>
-      <h1>Prepare Game</h1>
-      <div>
-        <label>
-          Length:
-          <input
-            type="number"
-            value={length}
-            onChange={handleLengthChange}
-            min="1" // Set a minimum value if needed
-          />
-        </label>
+    <>
+      <div className="flex-grow">
+
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold">Prepare Game</h2>
+          <h3>Choose length</h3>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {[4, 5, 6, 7].map((number) => (
+            <Card key={number} className="bg-primary text-white number-card hover:bg-primary/90" onClick={handleCardClick(number)}>
+              <CardContent className="flex items-center justify-center h-32">
+                <span className="text-4xl font-bold">{number}</span>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Button size="lg" className="bg-primary text-white hover:bg-primary/90" onClick={handlePlay}>
+            Play
+          </Button>
+        </div>
       </div>
-      <div>
-        <label>
-          Language: {language}
-          <button onClick={toggleLanguage}>Toggle Language</button>
-        </label>
-      </div>
-      <button onClick={handlePlay}>Play</button>
-    </div>
-  );
+
+      <footer className="p-4">
+        <div className="container mx-auto flex justify-end">
+          <Toggle aria-label="Toggle Language" onClick={toggleLanguage}>
+            <span class={language === ESTONIAN? "fi fi-ee": "fi fi-us"}></span>
+            Toggle Language
+          </Toggle>
+        </div>
+      </footer>
+    </>
+  )
 }
