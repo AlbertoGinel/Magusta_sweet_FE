@@ -198,28 +198,6 @@ export default function Home() {
             </main>
           </div>
         </div>
-
-        // <div>
-        //   <h1>Game In Progress</h1>
-        //   <div>
-        //     <p>Seeds: {seeds}</p>
-        //     <p>Type: {type}</p>
-        //     <p>Initial Sentence: {initialSentence}</p>
-        //     <p>Word Length: {wordLength}</p>
-        //   </div>
-
-        //   <div>
-        //     <label htmlFor="textInput">Text Input</label>
-        //     <input
-        //       type="text"
-        //       id="textInput"
-        //       name="textInput"
-        //       value={text} // Controlled value
-        //       onChange={handleTextChange} // Update state on user input
-        //     />
-        //   </div>
-        //   <button onClick={solveGame}>Solve Game</button>
-        // </div>
       )}
 
       {gameState === "gameSolved" && (
