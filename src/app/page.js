@@ -6,6 +6,7 @@ import EstonianWord from "./components/EstonianWord";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Toggle } from "@/components/ui/toggle"
+import { Input } from "@/components/ui/input"
 
 const ESTONIAN = "ESTONIAN";
 const ENGLISH = "ENGLISH";
@@ -137,8 +138,8 @@ export default function Home() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
                 {[3, 4, 5, 6, 7, 8, 9, 10].map((number) => (
-                  <Card key={number} className={length === number? "bg-primary/95" : "bg-primary" 
-                    + " text-white number-card hover:bg-primary/90 " 
+                  <Card key={number} className={length === number ? "bg-primary/95" : "bg-primary"
+                    + " text-white number-card hover:bg-primary/90 "
                   }
                     onClick={handleLengthChange(number)}
                   >
@@ -171,25 +172,31 @@ export default function Home() {
 
       {gameState === "gameCreated" && (
         <div>
-          <h1>Game In Progress</h1>
-          <div>
-            <p>Seeds: {seeds}</p>
-            <p>Type: {type}</p>
-            <p>Initial Sentence: {initialSentence}</p>
-            <p>Word Length: {wordLength}</p>
-          </div>
+          <div className="flex-grow">
+            <div className="text-center">
+              <h2 className="text-4xl font-bold">Game In Progress</h2>
+            </div>
 
-          <div>
-            <label htmlFor="textInput">Text Input</label>
-            <input
-              type="text"
-              id="textInput"
-              name="textInput"
-              value={text} // Controlled value
-              onChange={handleTextChange} // Update state on user input
-            />
+            <main className="flex-grow flex flex-col items-center justify-center p-4">
+              <p className="text-2xl mb-8 text-center">{initialSentence}</p>
+
+              <Input
+                type="text"
+                placeholder="Enter your translation"
+                value={text}
+                onChange={handleTextChange}
+                className="max-w-md w-full"
+                id="textInput"
+                name="textInput"
+              />
+
+                <Button size="lg" className="m-8 bg-primary text-white hover:bg-primary/90"
+                  onClick={solveGame}
+                >
+                  Solve Game
+                </Button>
+            </main>
           </div>
-          <button onClick={solveGame}>Solve Game</button>
         </div>
       )}
 
