@@ -1,15 +1,15 @@
 "use client"; // Indicate it's a Client Component
 
 import React, { useState } from "react";
-import { useGameStore } from "../_lib/stores/gameStore";
+import useGameStore from "../_lib/stores/gameStore";
+import useAuthStore from "../_lib/stores/authStore"; // Import useAuthStore to access the token
 import PrepareGame from "./PrepareGame";
 import WaitingInput from "./WaitingInput";
 
 export default function AfterMatch() {
   const state = useGameStore((state) => state); // Access Zustand store state
-  const setGameState = useGameStore((state) => state.setStep); // Step setter
   const [selectedLevels, setSelectedLevels] = useState({}); // Stores the selected level for each word
-  const userID = "c38f66aa-d08c-464d-9471-53b2f81c081f"; // User ID
+  const { token } = useAuthStore(); // Access token from Zustand store
 
   // Function to handle button clicks
   const handleButtonClick = (value, word) => {
@@ -49,10 +49,10 @@ export default function AfterMatch() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add the token in Authorization header
           },
           body: JSON.stringify({
-            userID: userID,
-            wordsList: wordsList,
+            wordsList: wordsList, // Send the selected word levels
           }),
         }
       );

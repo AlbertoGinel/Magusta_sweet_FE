@@ -1,28 +1,35 @@
 "use client"; // Indicate it's a Client Component
 
 import React, { useEffect, useCallback } from "react";
-import { useGameStore } from "../_lib/stores/gameStore";
+import useGameStore from "../_lib/stores/gameStore";
+import useAuthStore from "../_lib/stores/authStore"; // Corrected import
 import PrepareGame from "../components/PrepareGame";
 import WaitingInput from "../components/WaitingInput";
 import AfterMatch from "../components/AfterMatch";
 
 export default function Game() {
-  // Access Zustand store states and actions
+  // Access Zustand stores for game state and actions
   const state = useGameStore((state) => state);
   const setGameData = useGameStore((state) => state.setGameData);
   const resetGame = useGameStore((state) => state.reset);
 
+  // Access the token from the auth store correctly
+  const token = useAuthStore((state) => state.token); // Call it like a hook
+
   // Use useCallback to memoize fetchGameData
   const fetchGameData = useCallback(async () => {
+    if (!token) {
+      console.error("No token available for authentication");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8080/api/game/getgame", {
-        method: "POST",
+        method: "GET", // Change to GET method
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the Bearer token in the headers
         },
-        body: JSON.stringify({
-          user: "c38f66aa-d08c-464d-9471-53b2f81c081f", // Use the actual user ID here
-        }),
       });
 
       if (!response.ok) {
@@ -41,7 +48,7 @@ export default function Game() {
       console.error("Error fetching game data:", error);
       setGameData(null); // Set null if fetch fails
     }
-  }, [setGameData]);
+  }, [token, setGameData]);
 
   useEffect(() => {
     fetchGameData();

@@ -1,12 +1,14 @@
 "use client"; // Indicate it's a Client Component
 
 import React, { useState } from "react";
-import { useGameStore } from "../_lib/stores/gameStore";
+import useGameStore from "../_lib/stores/gameStore";
+import useAuthStore from "../_lib/stores/authStore"; // Import the useAuthStore hook to access the token
 
 export default function WaitingInput() {
   const state = useGameStore((state) => state);
   const setGameData = useGameStore((state) => state.setGameData); // Import the function to update the game data
   const [humanResponse, setHumanResponse] = useState(""); // State for the input response
+  const { token } = useAuthStore(); // Access the token from the auth store
 
   const handleResponseChange = (event) => {
     setHumanResponse(event.target.value);
@@ -20,9 +22,9 @@ export default function WaitingInput() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
           },
           body: JSON.stringify({
-            user: "c38f66aa-d08c-464d-9471-53b2f81c081f", // Your user ID here
             humanResponse: humanResponse, // User's input response
           }),
         }

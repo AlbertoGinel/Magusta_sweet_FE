@@ -40,4 +40,4 @@ const useGameStore = create((set) => ({
   setStep: (newStep) => set({ step: newStep }), // Function to set the step
 }));
 
-export { useGameStore };
+export default useGameStore;

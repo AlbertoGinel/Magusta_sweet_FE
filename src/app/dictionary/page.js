@@ -1,79 +1,81 @@
-"use client"; // Add this line to indicate it's a Client Component
+"use client"; // Indicate it's a Client Component
 
-import { useEffect, useState } from "react";
-import { isNotFoundError } from "next/dist/client/components/not-found";
-import { format } from "date-fns"; // Import format function from date-fns
+import React, { useEffect, useState } from "react";
+import useAuthStore from "../_lib/stores/authStore"; // Import the auth store to get the token
 
 export default function Dictionary() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [words, setWords] = useState([]);
+  const { token } = useAuthStore((state) => state); // Access the token from the Zustand store
 
   useEffect(() => {
-    async function fetchData() {
+    // Fetch the words when the component mounts
+    const fetchWords = async () => {
+      if (!token) {
+        console.error("No token available for authentication");
+        return;
+      }
+
       try {
-        const response = await fetch("http://localhost:8080/api/words", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/words/allPersonalWordsbyID",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Include the Bearer token in the headers
+            },
+          }
+        );
 
         if (!response.ok) {
-          if (isNotFoundError(response)) {
-            throw new Error("Not Found");
-          }
-          throw new Error("Failed to fetch data");
+          throw new Error("Failed to fetch words");
         }
 
         const data = await response.json();
 
-        // Sort the data by "lastApperance" with the oldest first
-        const sortedData = data.sort((a, b) => {
-          const dateA = new Date(a.lastApperance);
-          const dateB = new Date(b.lastApperance);
-          return dateA - dateB;
-        });
+        // Sort the words by lastAppearance (newest first)
+        const sortedWords = data.sort(
+          (a, b) => new Date(b.lastAppearance) - new Date(a.lastAppearance)
+        );
 
-        setData(sortedData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        setWords(sortedWords); // Set the sorted words in the state
+      } catch (error) {
+        console.error("Error fetching words:", error);
       }
-    }
+    };
 
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (error) {
-    return <h1>Error: {error}</h1>;
-  }
+    fetchWords();
+  }, [token]); // Only re-run the effect if the token changes
 
   return (
     <div>
       <h1>Dictionary</h1>
-      <ul>
-        {data && data.length > 0 ? (
-          data.map((word) => (
-            <li key={word.id}>
-              <strong>{word.idString}</strong> ({word.english}) - Type:{" "}
-              {word.type} - {formatDate(word.lastApperance)}
-            </li>
-          ))
-        ) : (
-          <p>No words found.</p>
-        )}
-      </ul>
+      {words.length === 0 ? (
+        <p>No words found.</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Last Appearance</th>
+              <th>Estonian</th>
+              <th>Halo</th>
+              <th>Level</th>
+              <th>State</th>
+            </tr>
+          </thead>
+          <tbody>
+            {words.map((word) => (
+              <tr key={word.id}>
+                <td>{new Date(word.lastAppearance).toLocaleDateString()}</td>
+                <td>{word.estonian}</td>
+                <td>{word.halo}</td>
+                <td>{word.level}</td>
+                <td>{word.state}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
-}
-
-// Helper function to format the date using date-fns
-function formatDate(dateString) {
-  return format(new Date(dateString), "dd/MM/yy HH:mm"); // Format: 20/08/24 12:00
 }

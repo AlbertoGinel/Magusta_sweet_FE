@@ -1,12 +1,15 @@
 "use client"; // Indicate it's a Client Component
 
 import React, { useState } from "react";
-import { useGameStore } from "../_lib/stores/gameStore";
+import useGameStore from "../_lib/stores/gameStore";
+import useAuthStore from "../_lib/stores/authStore"; // Import useAuthStore to access the token
 
 export default function PrepareGame() {
   const [length, setLength] = useState(4); // Default length is 4
   const [language, setLanguage] = useState("ESTONIAN"); // Default language
+  const [loading, setLoading] = useState(false); // New loading state
   const setGameData = useGameStore((state) => state.setGameData);
+  const { token } = useAuthStore(); // Retrieve the token from Zustand store
 
   const handleLengthChange = (event) => {
     setLength(event.target.value);
@@ -19,6 +22,8 @@ export default function PrepareGame() {
   };
 
   const handlePlay = async () => {
+    setLoading(true); // Set loading to true when the play button is pressed
+
     try {
       const response = await fetch(
         "http://localhost:8080/api/game/creategame",
@@ -26,11 +31,11 @@ export default function PrepareGame() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add the token to the Authorization header
           },
           body: JSON.stringify({
             type: language,
             length: parseInt(length, 10), // Convert length to a number
-            user: "c38f66aa-d08c-464d-9471-53b2f81c081f", // Your user ID here
           }),
         }
       );
@@ -43,6 +48,8 @@ export default function PrepareGame() {
       setGameData(gameData); // Update the Zustand store with the game data
     } catch (error) {
       console.error("Error creating game:", error);
+    } finally {
+      setLoading(false); // Set loading to false once the request is done
     }
   };
 
@@ -66,7 +73,12 @@ export default function PrepareGame() {
           <button onClick={toggleLanguage}>Toggle Language</button>
         </label>
       </div>
-      <button onClick={handlePlay}>Play</button>
+      {/* Show loading state if the game is being created */}
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <button onClick={handlePlay}>Play</button>
+      )}
     </div>
   );
 }
