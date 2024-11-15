@@ -1,12 +1,13 @@
 // src/app/_lib/stores/authStore.js
 import { create } from "zustand";
+import config from "./config";
 
 const useAuthStore = create((set) => ({
   token: null,
   isAuthenticated: false,
   login: async (username, password) => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch(`${config.baseUrl}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

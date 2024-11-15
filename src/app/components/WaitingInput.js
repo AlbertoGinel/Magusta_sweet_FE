@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import useGameStore from "../_lib/stores/gameStore";
-import useAuthStore from "../_lib/stores/authStore"; // Import the useAuthStore hook to access the token
+import useAuthStore from "../_lib/stores/authStore";
+import config from "./config";
 
 export default function WaitingInput() {
   const state = useGameStore((state) => state);
@@ -16,19 +17,16 @@ export default function WaitingInput() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/game/gameResponse",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-          body: JSON.stringify({
-            humanResponse: humanResponse, // User's input response
-          }),
-        }
-      );
+      const response = await fetch(`${config.baseUrl}/api/game/gameResponse`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+        body: JSON.stringify({
+          humanResponse: humanResponse, // User's input response
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to send response");

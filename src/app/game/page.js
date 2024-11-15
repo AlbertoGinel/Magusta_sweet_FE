@@ -6,6 +6,7 @@ import useAuthStore from "../_lib/stores/authStore"; // Corrected import
 import PrepareGame from "../components/PrepareGame";
 import WaitingInput from "../components/WaitingInput";
 import AfterMatch from "../components/AfterMatch";
+import config from "./config";
 
 export default function Game() {
   // Access Zustand stores for game state and actions
@@ -24,7 +25,7 @@ export default function Game() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/game/getgame", {
+      const response = await fetch(`${config.baseUrl}/api/game/getgame`, {
         method: "GET", // Change to GET method
         headers: {
           "Content-Type": "application/json",

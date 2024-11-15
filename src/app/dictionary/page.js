@@ -17,7 +17,7 @@ export default function Dictionary() {
 
       try {
         const response = await fetch(
-          "http://localhost:8080/api/words/allPersonalWordsbyID",
+          `${config.baseUrl}/api/words/allPersonalWordsbyID`,
           {
             method: "GET",
             headers: {

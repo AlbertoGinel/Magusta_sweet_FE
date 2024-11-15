@@ -5,6 +5,7 @@ import useGameStore from "../_lib/stores/gameStore";
 import useAuthStore from "../_lib/stores/authStore"; // Import useAuthStore to access the token
 import PrepareGame from "./PrepareGame";
 import WaitingInput from "./WaitingInput";
+import config from "./config";
 
 export default function AfterMatch() {
   const state = useGameStore((state) => state); // Access Zustand store state
@@ -43,19 +44,16 @@ export default function AfterMatch() {
 
     const wordsList = Object.values(selectedLevels);
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/game/finishGame",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add the token in Authorization header
-          },
-          body: JSON.stringify({
-            wordsList: wordsList, // Send the selected word levels
-          }),
-        }
-      );
+      const response = await fetch(`${config.baseUrl}/api/game/finishGame`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add the token in Authorization header
+        },
+        body: JSON.stringify({
+          wordsList: wordsList, // Send the selected word levels
+        }),
+      });
 
       // Handle different response scenarios
       const text = await response.text(); // Read the response as text
