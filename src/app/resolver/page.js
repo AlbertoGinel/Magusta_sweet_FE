@@ -20,11 +20,11 @@ export default function ResolverPage() {
 
     const router = useRouter()
 
-    useEffect(() => {
-        if (initialSentence === "") {
-            router.push("/")
-        }
-    }, [initialSentence, router]);
+    // useEffect(() => {
+    //     if (initialSentence === "") {
+    //         router.push("/")
+    //     }
+    // }, [initialSentence, router]);
 
     const solveGame = async () => {
         setLoading(true);
@@ -60,7 +60,7 @@ export default function ResolverPage() {
             console.error("Error creating game:", error);
         } finally {
             setLoading(false);
-            router.push("/solved")
+            router.push("/result")
         }
     };
 
