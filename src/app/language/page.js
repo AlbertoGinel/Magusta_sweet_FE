@@ -24,11 +24,9 @@ export default function Page() {
       type: language === 'English' ? ENGLISH : ESTONIAN
     });
 
-    if (language === 'English') {
+    if (language === 'English' || language === 'Estonian') {
       router.push('/creategame');
-    } else if (language === 'Estonian') {
-      router.push('/creategame');
-    }
+    } 
   }
 
   // return (
