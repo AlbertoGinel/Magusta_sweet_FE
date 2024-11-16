@@ -11,11 +11,9 @@ export default function Page() {
   const handleLanguageSelect = (language) => {
     setSelectedLanguage(language)
 
-    if (language === 'English') {
-        router.push('/game');
-      } else if (language === 'Estonian') {
-        router.push('/game');
-      }
+    if (language === 'English' || language === 'Estonian') {
+        router.push('/creategame');
+      } 
   }
   
   return (
