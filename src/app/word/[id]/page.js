@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Star, ChevronLeft, ChevronRight, Link } from 'lucide-react'
+import { Star, ChevronLeft, ChevronRight, Volume2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import axios from "axios";
 import { useGameStore } from "../../_lib/stores/gameStore";
 import { useParams, useRouter } from 'next/navigation'
+import { useTTS } from "../../hooks/useTTS";
+
 
 const userID = "c38f66aa-d08c-464d-9471-53b2f81c081f"; // User ID
 
@@ -29,6 +31,8 @@ export default function Component({ params: { id } }) {
     const params = useParams();
 
     const word = estonianWords.find(({ id }) => id === params.id)
+
+    const speak = useTTS(word?.estonian)
 
     const router = useRouter()
 
@@ -65,39 +69,39 @@ export default function Component({ params: { id } }) {
     }
 
     const handleSubmit = async () => {
-    
+
         const wordsList = Object.values(selectedLevels);
         try {
-          const response = await fetch(
-            process.env.BE_URL + "/api/game/finishGame",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                userID: userID,
-                wordsList: wordsList,
-              }),
+            const response = await fetch(
+                process.env.BE_URL + "/api/game/finishGame",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userID: userID,
+                        wordsList: wordsList,
+                    }),
+                }
+            );
+
+            // Handle different response scenarios
+            const text = await response.text(); // Read the response as text
+
+            if (!response.ok) {
+                // Handle error response
+                throw new Error(`Failed to update personal words: ${text}`);
             }
-          );
-    
-          // Handle different response scenarios
-          const text = await response.text(); // Read the response as text
-    
-          if (!response.ok) {
-            // Handle error response
-            throw new Error(`Failed to update personal words: ${text}`);
-          }
-    
-          // Attempt to parse JSON only if the response is not empty
-          const result = text ? JSON.parse(text) : {}; // Safely parse if there's content
-          console.log("Words updated successfully:", result);
+
+            // Attempt to parse JSON only if the response is not empty
+            const result = text ? JSON.parse(text) : {}; // Safely parse if there's content
+            console.log("Words updated successfully:", result);
 
         } catch (error) {
-          console.error("Error updating word:", error);
+            console.error("Error updating word:", error);
         }
-      };
+    };
 
     const handleLeftClick = () => {
         pre && router.push(`/word/${pre.id}`)
@@ -110,7 +114,12 @@ export default function Component({ params: { id } }) {
     return (
         <div className="flex flex-col justify-between p-6">
             <div className=" flex flex-col items-center justify-center">
-                <h1 className="text-4xl font-bold text-primary">{word?.estonian}</h1>
+                <h1 className="text-4xl font-bold text-primary">
+                    {word?.estonian}
+                    <Button onClick={speak} className="ml-2">
+                        <Volume2 style={{ marginRight: '8px' }} />
+                    </Button>
+                </h1>
                 <p className="text-2xl text-foreground">{word?.englishTranslation}</p>
             </div>
 

@@ -5,16 +5,22 @@ import { useGameStore } from "@/app/_lib/stores/gameStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Volume2 } from 'lucide-react';
+import { useTTS } from "../hooks/useTTS";
 
+const ESTONIAN = "ESTONIAN";
 
 export default function ResolverPage() {
     const {
         initialSentence,
         updateGameSettings,
-        setHumanResponse
+        setHumanResponse,
+        type,
     } = useGameStore();
     const [text, setText] = useState("");
     const [_, setLoading] = useState(false);
+
+    const speak = useTTS(initialSentence)
 
     const handleTextChange = (e) => {
         setText(e.target.value); // Update state with the new text value
@@ -75,7 +81,17 @@ export default function ResolverPage() {
 
                 <div className="p-4 h-[400px]">
                     <Card className="p-4 shadow-sm mb-10">
-                        <p className="text-2xl text-center break-words">{initialSentence}</p>
+                        <p className="text-2xl text-center break-words">{initialSentence}
+
+                            {type === ESTONIAN &&
+                                (
+                                    <Button onClick={speak} className="ml-2">
+                                        <Volume2 style={{ marginRight: '8px' }} />
+                                    </Button>
+                                )
+                            }
+                        </p>
+
                     </Card>
 
 
@@ -85,7 +101,7 @@ export default function ResolverPage() {
                             placeholder="Enter your translation"
                             value={text}
                             onChange={handleTextChange}
-                            className="max-w-md w-full bg-white"
+                            className="w-full bg-white"
                             id="textInput"
                             name="textInput"
                         />
