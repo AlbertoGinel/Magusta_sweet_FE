@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useGameStore } from "../_lib/stores/gameStore";
+import { useCallback } from "react";
+import { useRouter } from "next/router";
 
 export default function Result() {
   const {
@@ -17,6 +19,12 @@ export default function Result() {
     humanResponse,
     totalPoints
   } = useGameStore(); // Access all the needed values from Zustand
+
+  const router = useRouter()
+
+  const onGoToWords = useCallback(() => {
+    router.push("/words")
+  }, [router])
 
   return (
     <div className=" bg-gray-100 p-4 flex flex-col">
@@ -46,7 +54,7 @@ export default function Result() {
         </div>
         
         <div className="p-4 flex justify-end">
-          <Button>Show Words</Button>
+          <Button onClick={onGoToWords}>Show Words</Button>
         </div>
       </Card>
     </div>
