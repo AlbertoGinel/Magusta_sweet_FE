@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Star, ChevronLeft, ChevronRight, Link } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import axios from "axios";
-import { useGameStore } from "../../_lib/stores/gameStore"; 
-import { useParams } from 'next/navigation'
+import { useGameStore } from "../../_lib/stores/gameStore";
+import { useParams, useRouter } from 'next/navigation'
 
 export default function Component({ params: { id } }) {
     const [rating, setRating] = useState(0)
@@ -28,6 +28,11 @@ export default function Component({ params: { id } }) {
 
     const word = estonianWords.find(({ id }) => id === params.id)
 
+    const router = useRouter()
+
+    const pre = estonianWords[estonianWords.findIndex(({ id }) => id === params.id) - 1]
+    const next = estonianWords[estonianWords.findIndex(({ id }) => id === params.id) + 1]
+
 
     // async function getWord() {
     //     const data = await axios.post("http://localhost:8080/api/game/finishGame")
@@ -46,8 +51,16 @@ export default function Component({ params: { id } }) {
         setRating(value)
     }
 
+    const handleLeftClick = () => {
+        pre && router.push(`/word/${pre.id}`)
+    }
+
+    const handleRightClick = () => {
+        next && router.push(`/word/${next.id}`)
+    }
+
     return (
-        <div className="bg-gradient-to-b from-blue-100 to-blue-200 flex flex-col justify-between p-6">
+        <div className="flex flex-col justify-between p-6">
             <div className=" flex flex-col items-center justify-center">
                 <h1 className="text-4xl font-bold text-primary">{word?.estonian}</h1>
                 <p className="text-2xl text-foreground">{word?.englishTranslation}</p>
@@ -73,11 +86,11 @@ export default function Component({ params: { id } }) {
                 </div>
 
                 <div className="flex justify-between items-center">
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button variant="outline" size="icon" className="rounded-full" onClick={handleLeftClick}>
                         <ChevronLeft className="h-4 w-4" />
                         <span className="sr-only">Previous word</span>
                     </Button>
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button variant="outline" size="icon" className="rounded-full" onClick={handleRightClick}>
                         <ChevronRight className="h-4 w-4" />
                         <span className="sr-only">Next word</span>
                     </Button>
