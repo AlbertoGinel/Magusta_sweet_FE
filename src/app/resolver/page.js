@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/app/_lib/stores/gameStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+
 
 export default function ResolverPage() {
     const {
@@ -67,29 +69,35 @@ export default function ResolverPage() {
     return (
         <div>
             <div className="flex-grow">
-                <div className="text-center">
-                    <h2 className="text-4xl font-bold">Game In Progress</h2>
+                <div className="text-center flex flex-col flex-grow justify-end">
+                    <h2 className="text-4xl font-bold mb-20">Game In Progress</h2>
                 </div>
 
-                <main className="flex-grow flex flex-col items-center justify-center p-4">
-                    <p className="text-2xl mb-8 text-center">{initialSentence}</p>
+                <div className="p-4 h-[400px]">
+                    <Card className="p-4 shadow-sm mb-10">
+                        <p className="text-2xl text-center break-words">{initialSentence}</p>
+                    </Card>
 
-                    <Input
-                        type="text"
-                        placeholder="Enter your translation"
-                        value={text}
-                        onChange={handleTextChange}
-                        className="max-w-md w-full"
-                        id="textInput"
-                        name="textInput"
-                    />
 
-                       <Button size="lg" className="m-8 bg-primary text-white hover:bg-primary/90"
-                               onClick={solveGame}
-                       >
-                           Solve Game
-                       </Button>
-                </main>
+                    <div className="relative flex flex-col">
+                        <Input
+                            type="text"
+                            placeholder="Enter your translation"
+                            value={text}
+                            onChange={handleTextChange}
+                            className="max-w-md w-full bg-white"
+                            id="textInput"
+                            name="textInput"
+                        />
+
+                        <Button size="lg" className="m-8 bg-primary text-white hover:bg-primary/90"
+                            onClick={solveGame}
+                        >
+                            Solve Game
+                        </Button>
+                    </div>
+
+                </div>
             </div>
         </div>
     )

@@ -54,21 +54,21 @@ export default function Page() {
 
   return (<div className="flex-1 flex flex-col items-center justify-center space-y-8">
     <div className="text-center space-y-2 justify-end pb-6">
-      <h1 className="text-3xl font-bold text-sky-500">Choose the language</h1>
+      <h1 className="text-3xl font-bold text-primary">Choose the language</h1>
       <p className="text-slate-600">Here, you can decide what you want to practise</p>
     </div>
 
     <div className="w-full space-y-4">
       <Button
         onClick={() => handleLanguageSelect('English')}
-        className="w-full h-14 text-lg bg-sky-400 hover:bg-sky-500 text-white"
+        className="w-full h-14 text-lg bg-primary text-white"
         variant={selectedLanguage === 'English' ? 'default' : 'outline'}
       >
         English to Estonian
       </Button>
       <Button
         onClick={() => handleLanguageSelect('Estonian')}
-        className="w-full h-14 text-lg bg-sky-400 hover:bg-sky-500 text-white"
+        className="w-full h-14 text-lg bg-primary text-white"
         variant={selectedLanguage === 'Estonian' ? 'default' : 'outline'}
       >
         Estonian to English
