@@ -32,8 +32,8 @@ export default function Page() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl text-blue-500 font-bold mb-8">Please choose language to play</h1>
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <h1 className="text-4xl text-primary-foreground font-bold mb-8">Choose the language</h1>
       <div className="flex space-x-4 mb-8">
         <Button
           onClick={() => handleLanguageSelect('English')}
