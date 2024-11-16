@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Toggle } from "@/components/ui/toggle"
 import { Input } from "@/components/ui/input"
+import Link from "next/link";
 
 const ESTONIAN = "ESTONIAN";
 const ENGLISH = "ENGLISH";
@@ -156,6 +157,11 @@ export default function Home() {
                 >
                   {loading ? "Creating..." : "Create Game"}
                 </Button>
+                <Link href="/creategame">
+                <Button size="lg" className="bg-primary text-white hover:bg-primary/90"
+                  disabled={loading}>
+                  New Create Game Page Style
+                </Button></Link>
               </div>
             </div>
           </div>
