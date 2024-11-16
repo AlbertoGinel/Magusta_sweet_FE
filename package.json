@@ -25,6 +25,8 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.12",
     "eslint": "^8",
     "eslint-config-next": "14.2.10",
     "postcss": "^8",
