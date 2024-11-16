@@ -3,19 +3,34 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation';
+import { useGameStore } from "../_lib/stores/gameStore";
+
+const ESTONIAN = "ESTONIAN";
+const ENGLISH = "ENGLISH";
 
 export default function Page() {
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const router = useRouter();
 
+  const {
+    updateGameSettings,
+  } = useGameStore();
+
   const handleLanguageSelect = (language) => {
     setSelectedLanguage(language)
 
-    if (language === 'English' || language === 'Estonian') {
-        router.push('/creategame');
-      } 
+    // Update Zustand store with the game data
+    updateGameSettings({
+      type: language === 'English' ? ENGLISH: ESTONIAN
+    });
+
+    if (language === 'English') {
+      router.push('/creategame');
+    } else if (language === 'Estonian') {
+      router.push('/creategame');
+    }
   }
-  
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-4xl text-blue-500 font-bold mb-8">Please choose language to play</h1>
@@ -33,7 +48,7 @@ export default function Page() {
           Estonian to English
         </Button>
       </div>
-      
+
     </main>
   )
 }
