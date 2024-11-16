@@ -12,9 +12,9 @@ export default function Page() {
     setSelectedLanguage(language)
 
     if (language === 'English') {
-        router.push('/game');
+        router.push('/creategame');
       } else if (language === 'Estonian') {
-        router.push('/game');
+        router.push('/creategame');
       }
   }
   

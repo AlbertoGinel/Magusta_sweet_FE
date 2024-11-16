@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { AlignLeft } from 'lucide-react'
+import { useRouter } from 'next/navigation';
 
 const NewStyleCreateGame = () => {
     const [selectedLength, setSelectedLength] = useState(null)
@@ -10,6 +11,8 @@ const NewStyleCreateGame = () => {
     const [gameState, setGameState] = useState("noGame");
     const [language, setLanguage] = useState("ESTONIAN");
     const [text, setText] = useState("");
+
+    const router = useRouter();
 
 
     const lengths = [3, 4, 5, 6, 7, 8, 9, 10]
@@ -62,6 +65,7 @@ const NewStyleCreateGame = () => {
         console.error("Error creating game:", error);
       } finally {
         setLoading(false);
+        router.push("/result")
       }
     };
 
