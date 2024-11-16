@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
           <header className="bg-primary p-4">
             <div className="container mx-auto flex justify-between items-center">
               <h1 className="text-2xl font-bold text-white">Magusta Suite</h1>
+              {/*TODO: not for hackathon****
               <nav>
                 <Button asChild variant="secondary" className="mr-2">
                   <Link href="/game">Game</Link>
@@ -33,7 +34,7 @@ export default function RootLayout({ children }) {
                 <Button asChild variant="ghost" className="text-white hover:text-[#0072CE] hover:bg-white">
                   <Link href="/dictionary">Dictionary</Link>
                 </Button>
-              </nav>
+              </nav> */}
             </div>
           </header>
 
