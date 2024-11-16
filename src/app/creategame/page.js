@@ -21,7 +21,7 @@ const NewStyleCreateGame = () => {
     } = useGameStore();
 
 
-    const lengths = [3, 4, 5, 6, 7, 8, 9, 10]
+    const lengths = [3, 4, 5, 6]
     const colors = [
         'bg-red-500 hover:bg-red-600',
         'bg-blue-500 hover:bg-blue-600',
@@ -78,22 +78,21 @@ const NewStyleCreateGame = () => {
 
 
     return (
-        <Card className="w-full max-w-2xl mx-auto flex flex-col items-center">
+        <div className="w-full max-w-2xl mx-auto flex flex-col items-center shadow-none bg-none border-none">
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-2xl font-bold">Learn Language Game</CardTitle>
+          <CardTitle className="text-3xl font-bold">Choose a Number</CardTitle>
           <p className="text-muted-foreground">Select the number of words in a sentense</p>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {lengths.map((length, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-16">
+            {lengths.map((length) => (
               <Button
                 key={length}
-                className={`h-24 text-lg hover:scale-105 transition-transform ${colors[index % colors.length]} text-white border-none ${selectedLength === length ? 'ring-4 ring-white ring-opacity-60' : ''}`}
+                className={`h-28 w-28 text-lg hover:scale-105 transition-transform text-white border-none rounded-[20px] ${selectedLength === length ? 'ring-4 ring-white ring-opacity-60' : ''}`}
                 onClick={() => setSelectedLength(length)}
               >
                 <div className="space-y-2">
-                  <AlignLeft className="w-6 h-6 mx-auto" />
-                  <span>{length} Words</span>
+                  <span>{length}</span>
                 </div>
               </Button>
             ))}
@@ -109,7 +108,7 @@ const NewStyleCreateGame = () => {
             Start Game
           </Button>
         </CardFooter>
-      </Card>
+      </div>
     );
 }
 
