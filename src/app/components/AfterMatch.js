@@ -33,7 +33,7 @@ export default function AfterMatch() {
     }));
   };
 
-  // Check if all words have a selected level
+  // Check if all word have a selected level
   const allWordsSelected = state.estonianWords.every(
     (word) => selectedLevels[word.estonian]
   );
@@ -72,7 +72,7 @@ export default function AfterMatch() {
       // Reset step to 0 after successful submission
       state.setStep(0);
     } catch (error) {
-      console.error("Error updating words:", error);
+      console.error("Error updating word:", error);
     }
   };
 
