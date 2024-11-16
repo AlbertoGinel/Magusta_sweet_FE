@@ -4,23 +4,43 @@ import { useEffect, useState } from 'react'
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import axios from "axios";
+import { useGameStore } from "../../_lib/stores/gameStore"; 
+import { useParams } from 'next/navigation'
 
-export default function Component({params: { id }}) {
+export default function Component({ params: { id } }) {
     const [rating, setRating] = useState(0)
     const [result, setResult] = useState({})
 
-    async function getWord() {
-        const data = await axios.post("http://localhost:8080/api/game/finishGame")
-        setResult(data.data.wordList.filter(w => w.id === id))
-    }
+    const {
+        initialSentence,
+        openTime,
+        type,
+        wordLength,
+        seeds,
+        updateGameSettings,
+        translation,
+        estonianWords,
+        closeTime,
+        humanResponse,
+        totalPoints
+    } = useGameStore(); // Access all the needed values from Zustand
+    const params = useParams();
 
-    useEffect(() => {
-        getWord()
-    }, [])
+    const word = estonianWords.find(({ id }) => id === params.id)
 
-    useEffect(() => {
-        console.log(result)
-    }, [result]);
+
+    // async function getWord() {
+    //     const data = await axios.post("http://localhost:8080/api/game/finishGame")
+    //     setResult(data.data.wordList.filter(w => w.id === id))
+    // }
+
+    // useEffect(() => {
+    //     getWord()
+    // }, [])
+
+    // useEffect(() => {
+    //     console.log(result)
+    // }, [result]);
 
     const handleRating = (value) => {
         setRating(value)
@@ -29,7 +49,8 @@ export default function Component({params: { id }}) {
     return (
         <div className="bg-gradient-to-b from-blue-100 to-blue-200 flex flex-col justify-between p-6">
             <div className=" flex flex-col items-center justify-center">
-                <h1 className="text-4xl font-bold text-blue-800">{result[0]?.estonian}</h1>
+                <h1 className="text-4xl font-bold text-primary">{word?.estonian}</h1>
+                <p className="text-2xl text-foreground">{word?.englishTranslation}</p>
             </div>
 
             <div className="">
@@ -43,9 +64,8 @@ export default function Component({params: { id }}) {
                             onClick={() => handleRating(star)}
                         >
                             <Star
-                                className={`w-8 h-8 ${
-                                    star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
-                                }`}
+                                className={`w-8 h-8 ${star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                                    }`}
                             />
                             <span className="sr-only">Rate {star} stars</span>
                         </Button>

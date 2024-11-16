@@ -27,36 +27,43 @@ export default function Result() {
   }, [router])
 
   return (
-    <div className=" bg-gray-100 p-4 flex flex-col">
-      <Card className="w-full max-w-md mx-auto flex-grow flex flex-col">
-        <div className="p-4 flex-grow">
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Original Sentence:</h2>
-            <p className="text-gray-700">{initialSentence}</p>
+    <div className="min-h-screen bg-none px-4 py-8">
+      <div className="max-w-md mx-auto space-y-6">
+        <div className="space-y-4">
+          <div className="bg-foreground rounded-lg p-4">
+            <h2 className="text-white text-sm font-medium mb-2">Original sentence</h2>
+            <Card className="p-3 bg-white shadow-sm">
+              <p className="text-slate-900">{initialSentence}</p>
+            </Card>
           </div>
-          
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Correct Translation:</h2>
-            <p className="text-green-600">{translation}</p>
+
+          <div className="bg-foreground rounded-lg p-4">
+            <h2 className="text-white text-sm font-medium mb-2">Your answer</h2>
+            <Card className="p-3 bg-white shadow-sm">
+              <p className="text-slate-900">{humanResponse}</p>
+            </Card>
           </div>
-          
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Your Translation:</h2>
-            <p className="text-blue-600">{humanResponse}</p>
+
+          <div className="bg-foreground rounded-lg p-4">
+            <h2 className="text-white text-sm font-medium mb-2">Solution</h2>
+            <Card className="p-3 bg-white shadow-sm">
+              <p className="text-slate-900">{translation}</p>
+            </Card>
           </div>
-          
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Your Score:</h2>
-            <div className="flex items-center">
-              <span className="ml-2 text-lg font-semibold">{totalPoints}</span>
+
+          <Card className="p-4 bg-white shadow-sm">
+            <div className="space-y-2">
+              <div className={'flex flex-col items-center justify-center'}>
+                {estonianWords.map((r, idx) =>
+                  <div onClick={() => router.push(`/word/${r.id}`)} className={'text-xl border shadow-md w-11/12 m-4 text-center flex justify-center items-center'} key={idx}>
+                    {r.estonian + " - " + r.englishTranslation}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          </Card>
         </div>
-        
-        <div className="p-4 flex justify-end">
-          <Button onClick={onGoToWords}>Show Words</Button>
-        </div>
-      </Card>
+      </div>
     </div>
   )
 }
