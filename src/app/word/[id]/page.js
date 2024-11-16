@@ -7,6 +7,8 @@ import axios from "axios";
 import { useGameStore } from "../../_lib/stores/gameStore";
 import { useParams, useRouter } from 'next/navigation'
 
+const userID = "c38f66aa-d08c-464d-9471-53b2f81c081f"; // User ID
+
 export default function Component({ params: { id } }) {
     const [rating, setRating] = useState(0)
     const [result, setResult] = useState({})
@@ -32,6 +34,8 @@ export default function Component({ params: { id } }) {
 
     const pre = estonianWords[estonianWords.findIndex(({ id }) => id === params.id) - 1]
     const next = estonianWords[estonianWords.findIndex(({ id }) => id === params.id) + 1]
+    const [selectedLevels, setSelectedLevels] = useState({}); // Stores the selected level for each word
+
 
 
     // async function getWord() {
@@ -49,7 +53,51 @@ export default function Component({ params: { id } }) {
 
     const handleRating = (value) => {
         setRating(value)
+
+        setSelectedLevels((prevLevels) => ({
+            ...prevLevels,
+            [word.estonian]: {
+                estonian: word.basicForm,
+                id: word.basicWordId || word.id,
+                level: value,
+            },
+        }));
     }
+
+    const handleSubmit = async () => {
+    
+        const wordsList = Object.values(selectedLevels);
+        try {
+          const response = await fetch(
+            "http://localhost:8080/api/game/finishGame",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userID: userID,
+                wordsList: wordsList,
+              }),
+            }
+          );
+    
+          // Handle different response scenarios
+          const text = await response.text(); // Read the response as text
+    
+          if (!response.ok) {
+            // Handle error response
+            throw new Error(`Failed to update personal words: ${text}`);
+          }
+    
+          // Attempt to parse JSON only if the response is not empty
+          const result = text ? JSON.parse(text) : {}; // Safely parse if there's content
+          console.log("Words updated successfully:", result);
+
+        } catch (error) {
+          console.error("Error updating word:", error);
+        }
+      };
 
     const handleLeftClick = () => {
         pre && router.push(`/word/${pre.id}`)
@@ -68,7 +116,7 @@ export default function Component({ params: { id } }) {
 
             <div className="">
                 <div className="flex justify-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
+                    {[1, 2, 3, 4, 5, 6].map((star) => (
                         <Button
                             key={star}
                             variant="ghost"
@@ -77,13 +125,14 @@ export default function Component({ params: { id } }) {
                             onClick={() => handleRating(star)}
                         >
                             <Star
-                                className={`w-8 h-8 ${star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                                className={`w-20 h-20 ${star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 fill-gray-300'
                                     }`}
                             />
                             <span className="sr-only">Rate {star} stars</span>
                         </Button>
                     ))}
                 </div>
+
 
                 <div className="flex justify-between items-center">
                     <Button variant="outline" size="icon" className="rounded-full" onClick={handleLeftClick}>
@@ -93,6 +142,16 @@ export default function Component({ params: { id } }) {
                     <Button variant="outline" size="icon" className="rounded-full" onClick={handleRightClick}>
                         <ChevronRight className="h-4 w-4" />
                         <span className="sr-only">Next word</span>
+                    </Button>
+                </div>
+
+                <div className='pt-20'>
+
+                    <Button
+                        onClick={handleSubmit}
+                        className="w-full h-14 text-lg bg-primary text-white"
+                    >
+                        save
                     </Button>
                 </div>
             </div>
