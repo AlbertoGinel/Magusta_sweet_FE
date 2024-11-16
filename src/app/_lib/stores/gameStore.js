@@ -38,6 +38,7 @@ const useGameStore = create((set) => ({
     })),
 
   setStep: (newStep) => set({ step: newStep }), // Function to set the step
+  setHumanResponse: (response) => set({humanResponse: response})
 }));
 
 export { useGameStore };
