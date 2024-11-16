@@ -31,7 +31,7 @@ export default function ResolverPage() {
     const solveGame = async () => {
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:8080/api/game/resolve", {
+            const res = await fetch(process.env.BE_URL + "/api/game/resolve", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

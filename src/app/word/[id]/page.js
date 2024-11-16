@@ -69,7 +69,7 @@ export default function Component({ params: { id } }) {
         const wordsList = Object.values(selectedLevels);
         try {
           const response = await fetch(
-            "http://localhost:8080/api/game/finishGame",
+            process.env.BE_URL + "/api/game/finishGame",
             {
               method: "POST",
               headers: {

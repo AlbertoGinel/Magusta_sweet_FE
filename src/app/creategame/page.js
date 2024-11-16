@@ -37,7 +37,7 @@ const NewStyleCreateGame = () => {
       setText("");
       setLoading(true);
       try {
-        const res = await fetch("http://localhost:8080/api/game/creategame", {
+        const res = await fetch(process.env.BE_URL + "/api/game/creategame", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

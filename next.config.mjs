@@ -6,6 +6,9 @@ const nextConfig = {
             destination: '/language',
             permanent: true,
         }];
+    },
+    env: {
+        BE_URL: process.env.BE_URL
     }
 };
 
