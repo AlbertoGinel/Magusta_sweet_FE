@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Toggle } from "@/components/ui/toggle"
 import { Input } from "@/components/ui/input"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const ESTONIAN = "ESTONIAN";
 const ENGLISH = "ENGLISH";
@@ -17,6 +19,7 @@ export default function Home() {
   const [language, setLanguage] = useState("ESTONIAN");
   const [length, setLength] = useState(4);
   const [text, setText] = useState("");
+  const [userSentenceAnswer, setUserSentenceAnswer] = useState("")
 
   const {
     initialSentence,
@@ -44,6 +47,8 @@ export default function Home() {
       prevLanguage === "ESTONIAN" ? "ENGLISH" : "ESTONIAN"
     );
   };
+  const router = useRouter()
+
 
   const createGame = async () => {
     setText("");
@@ -83,8 +88,11 @@ export default function Home() {
       console.error("Error creating game:", error);
     } finally {
       setLoading(false);
+      router.push("/resolver")
+
     }
   };
+
 
   const solveGame = async () => {
     setLoading(true);
@@ -112,9 +120,6 @@ export default function Home() {
         humanResponse: text,
       });
 
-      // Set game state to "gameCreated"
-      setGameState("gameSolved");
-
       console.log("Game solved:", data);
     } catch (error) {
       console.error("Error creating game:", error);
@@ -122,6 +127,7 @@ export default function Home() {
       setLoading(false);
     }
   };
+
 
   return (
     <>
@@ -151,11 +157,11 @@ export default function Home() {
               </div>
 
               <div className="text-center">
-                <Button size="lg" className="bg-primary text-white hover:bg-primary/90"
-                  onClick={createGame} disabled={loading}
-                >
-                  {loading ? "Creating..." : "Create Game"}
-                </Button>
+                  <Button size="lg" className="bg-primary text-white hover:bg-primary/90"
+                          onClick={createGame} disabled={loading}
+                  >
+                    {loading ? "Creating..." : "Create Game"}
+                  </Button>
               </div>
             </div>
           </div>
@@ -170,35 +176,6 @@ export default function Home() {
         </>
       )}
 
-      {gameState === "gameCreated" && (
-        <div>
-          <div className="flex-grow">
-            <div className="text-center">
-              <h2 className="text-4xl font-bold">Game In Progress</h2>
-            </div>
-
-            <main className="flex-grow flex flex-col items-center justify-center p-4">
-              <p className="text-2xl mb-8 text-center">{initialSentence}</p>
-
-              <Input
-                type="text"
-                placeholder="Enter your translation"
-                value={text}
-                onChange={handleTextChange}
-                className="max-w-md w-full"
-                id="textInput"
-                name="textInput"
-              />
-
-                <Button size="lg" className="m-8 bg-primary text-white hover:bg-primary/90"
-                  onClick={solveGame}
-                >
-                  Solve Game
-                </Button>
-            </main>
-          </div>
-        </div>
-      )}
 
       {gameState === "gameSolved" && (
         <div>
